@@ -1,0 +1,6 @@
+#!/bin/sh
+
+g++ -c Liquide.cpp -o Liquide.o
+g++ -c spreadMain.cpp -o spreadMain.o
+g++ spreadMain.o Liquide.o -o tcpServerThread -lpthread
+exit 0

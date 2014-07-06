@@ -1,0 +1,89 @@
+#!/bin/sh
+#
+
+# PID file path
+PID_FILE=/root/Spread/spread.pid
+
+# LOG file path
+LOG_FILE=/root/Spread/spread.log
+
+PROG=/root/Spread/tcpServerThread
+
+# The following is a functions.
+
+function start() {
+    ls $PID_FILE > /dev/null 2>&1
+    if [ $? -eq 0 ] ; then
+        pid=`cat $PID_FILE`
+        kill -0 $pid > /dev/null 2>&1
+        retval=$?
+        if [ $retval -eq 0 ] ; then
+            echo "spread is already running. pid:${pid}"
+            return 1
+        else
+            echo "removing pid file..."
+            rm -f $PID_FILE
+        fi
+    fi
+    echo -n "starting spread ..... "
+    $PROG > $LOG_FILE 2>&1 &
+    pid=$!
+    sleep 1
+    kill -0 $pid > /dev/null 2>&1
+    retval=$?
+    if [ $retval -eq 0 ] ; then
+        echo "[OK]"
+        echo "$pid" > $PID_FILE
+        return 0
+    else
+        echo "[FAILED]"
+    fi
+    return 1
+}
+
+function status() {
+    ls $PID_FILE > /dev/null 2>&1
+    if [ $? -eq 0 ] ; then
+        pid=`cat $PID_FILE`
+        kill -0 $pid > /dev/null 2>&1
+        retval=$?
+        if [ $retval -eq 0 ] ; then
+            echo "spread is running. pid:${pid}"
+            return 0
+        else
+            echo "spread is not running, but pid file exists"
+        fi
+    else
+        echo "spread is not running"
+    fi
+    return 1
+}
+
+function stop() {
+    ls $PID_FILE > /dev/null 2>&1
+    if [ $? -eq 0 ] ; then
+        pid=`cat $PID_FILE`
+        echo -n "stopping spread .... "
+        kill -9 $pid > /dev/null 2>&1
+        sleep 1
+        kill -0 $pid > /dev/null 2>&1
+        retval=$?
+        if [ $retval -eq 1 ] ; then
+            echo "[OK]"
+            rm -f $PID_FILE
+            return 0
+        else
+            echo "[FAILED]"
+        fi
+    else
+        echo "spread is not running"
+    fi
+    return 1
+}
+
+case $1 in
+
+        start ) start ;;
+        stop ) stop ;;
+        status ) status ;;
+esac
