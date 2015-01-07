@@ -428,7 +428,7 @@ char* Liquide::GetDataString(char *str)
 
 char* Liquide::GetGroupString(char *str)
 {
-  char ref[40];
+  char ref[64];
   //            0         10        20        30        40        50        60
   //            +----+----+----+----+----+----+----+----+----+----+----+----+---
   strcpy( ref, "123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+/" );
@@ -443,7 +443,8 @@ char* Liquide::GetGroupString(char *str)
       }
       else {
          if ( gMap[i][j] >= 0 ) {
-            char buf[2] = { ref[gMap[i][j] % 60], 0 };
+            //char buf[2] = { ref[gMap[i][j] % 60], 0 };
+            char buf[2] = { ref[gMap[i][j] % 3], 0 };
             strcat( str, buf );
          }
          flag = !flag;

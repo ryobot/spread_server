@@ -12,8 +12,8 @@
 
 #define BUF_SIZE 50
 
-char wbuf[32768];
-char message[32768];
+char wbuf[65536];
+char message[65536];
 //char databuf[2048];
 
 Liquide lq;
