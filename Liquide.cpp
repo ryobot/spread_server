@@ -443,8 +443,8 @@ char* Liquide::GetGroupString(char *str)
       }
       else {
          if ( gMap[i][j] >= 0 ) {
-            //char buf[2] = { ref[gMap[i][j] % 60], 0 };
-            char buf[2] = { ref[gMap[i][j] % 3], 0 };
+            char buf[2] = { ref[gMap[i][j] % 60], 0 };
+            //char buf[2] = { ref[gMap[i][j] % 3], 0 };
             strcat( str, buf );
          }
          flag = !flag;
