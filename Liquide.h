@@ -99,6 +99,10 @@ public:
     spread++;
     return true;
   }
+  bool IsGrowing()
+  {
+      return ( spread < maxR );
+  }
 };
 
 class Hole
@@ -191,6 +195,8 @@ public:
   int GetDropCountAndReset();
   char* GetDataString(char *str);
   char* GetGroupString(char *str);
+  char* GetHoleString(char *str);
+  char* GetDropString(char *str);
   int GetTime();
   
 protected:

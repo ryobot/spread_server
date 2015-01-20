@@ -27,7 +27,9 @@ typedef struct {
 typedef struct {
     unsigned int timestamp;
     char data[1024];
-    char group[1024];
+    char group[256];
+    char hole[256];
+    char drop[256];
 } spread_data;
 
 typedef struct {
@@ -37,10 +39,14 @@ typedef struct {
     
     void init() {
         lq.Reset();
+        lq.AddHole(80,56);
+        lq.AddHole(100,80);
         cursor = 0;
         currentTime = 0;
         lq.GetDataString(data[cursor].data);
         lq.GetGroupString(data[cursor].group);
+        lq.GetHoleString(data[cursor].hole);
+        lq.GetDropString(data[cursor].drop);
         data[cursor].timestamp = currentTime++;
         cursor++;
     }
@@ -49,6 +55,8 @@ typedef struct {
         if ( lq.Update() ) {
             lq.GetDataString(data[cursor].data);
             lq.GetGroupString(data[cursor].group);
+            lq.GetHoleString(data[cursor].hole);
+            lq.GetDropString(data[cursor].drop);
             data[cursor].timestamp = currentTime++;
             if ( ++cursor == BUF_SIZE ) {
               cursor = 0;
@@ -81,7 +89,11 @@ typedef struct {
             strcat( buf, data[dataPos].data );
             strcat( buf, "</map><group>" );
             strcat( buf, data[dataPos].group );
-            strcat( buf, "</group></data>" );
+            strcat( buf, "</group><holes>" );
+            strcat( buf, data[dataPos].hole );
+            strcat( buf, "</holes><drops>" );
+            strcat( buf, data[dataPos].drop );
+            strcat( buf, "</drops></data>" );
         }
         strcat( buf, "</spread_data>" );
         return offset;
@@ -108,15 +120,18 @@ typedef struct {
 
 void *threadfunc2(void *data) {
     while (1) {
-        usleep(100000);
+        usleep(50000);
         if ( cnt%30 == 0 ) {
             int rx = rand() % 13;
             int ry = rand() % 8;
             lq.AddDrop(20 + rx*10, 20 + ry*10);
         }
-        if ( cnt++ == 1999 ) {
+        if ( cnt++ == 4999 ) {
             cnt = 0;
             lq.Reset();
+            int rx = rand() % 13;
+            int ry = rand() % 8;
+            lq.AddHole(20 + rx*10, 20 + ry*10);
         }
         spBuf.update();
 
