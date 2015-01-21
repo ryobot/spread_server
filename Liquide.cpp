@@ -458,7 +458,7 @@ char* Liquide::GetHoleString(char *str)
   strcpy( str, "" );
   char buf[128];
   for ( int i = 0; i < holes.size(); i++ ) {
-      sprintf( buf, "<hole>x%dy%d</hole>", holes[i].pos.x, holes[i].pos.y );
+      sprintf( buf, "<hole>%d|%d|%d</hole>", holes[i].pos.x, holes[i].pos.y, holes[i].count );
       strcat( str, buf );
   }
   return str;
@@ -469,7 +469,7 @@ char* Liquide::GetDropString(char *str)
   strcpy( str, "" );
   char buf[128];
   if ( drops.size() > 0 && drops[drops.size() - 1].IsGrowing() ) {
-      sprintf( buf, "<drop>x%dy%d</drop>", drops[drops.size() - 1].pos.x, drops[drops.size() - 1].pos.y );
+      sprintf( buf, "<drop>%d|%d|%d</drop>", drops[drops.size() - 1].pos.x, drops[drops.size() - 1].pos.y, drops[drops.size() - 1].spread );
       strcat( str, buf );
   }
   return str;
